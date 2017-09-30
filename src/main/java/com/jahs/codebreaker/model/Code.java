@@ -2,6 +2,7 @@ package com.jahs.codebreaker.model;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,15 +13,16 @@ import java.util.stream.Collectors;
 public class Code {
 
     private final List<PinColor> pins;
+    private final Set<PinColor> pinsSet;
 
-    public Code(List<PinColor> pins) {
+    public Code(GameConfig gameConfig, List<PinColor> pins) {
         // make sure we get all the pins..
         if (pins.size() != GameConstants.CODE_LENGTH) {
             throw new IllegalArgumentException("Expected " + GameConstants.CODE_LENGTH
                     + " pins, but got " + pins);
         }
-        Set<PinColor> uniqueColors = pins.stream().collect(Collectors.toSet());
-        if (uniqueColors.size() != GameConstants.CODE_LENGTH) {
+        pinsSet = EnumSet.copyOf(pins.stream().collect(Collectors.toSet()));
+        if (pinsSet.size() != GameConstants.CODE_LENGTH) {
             throw new IllegalArgumentException("Expected all unique pins, got: " + pins);
         }
 
@@ -37,4 +39,9 @@ public class Code {
         }
         return pins.get(positionIndex);
     }
+
+    public boolean hasColor(PinColor color) {
+        return pinsSet.contains(color);
+    }
+
 }
