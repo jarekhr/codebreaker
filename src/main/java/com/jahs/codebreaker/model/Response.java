@@ -1,5 +1,7 @@
 package com.jahs.codebreaker.model;
 
+import java.util.Objects;
+
 /**
  * Represents a response to a code.
  * White pin represents a color which exists in the code, but at a different index.
@@ -12,6 +14,7 @@ public class Response {
 
     private final int whitePins;
     private final int blackPins;
+    private final int misses;
 
     public Response(GameConfig gameConfig, int whitePins, int blackPins) {
         int total = whitePins + blackPins;
@@ -21,7 +24,8 @@ public class Response {
         }
         this.whitePins = whitePins;
         this.blackPins = blackPins;
-        this.gameConfig = gameConfig;
+        this.gameConfig = Objects.requireNonNull(gameConfig);
+        misses = gameConfig.getCodeLength() - (whitePins + blackPins);
     }
 
     public int getWhitePins() {
@@ -34,5 +38,9 @@ public class Response {
 
     public boolean isSuccess() {
         return blackPins == gameConfig.getCodeLength();
+    }
+
+    public int getMisses() {
+        return misses;
     }
 }
