@@ -4,6 +4,7 @@ import com.jahs.codebreaker.model.Code;
 import com.jahs.codebreaker.model.GameConfig;
 import com.jahs.codebreaker.model.PinColor;
 import com.jahs.codebreaker.model.Response;
+import com.jash.codebreaker.game.ai.ResponseToken;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +14,11 @@ import java.util.Arrays;
 public class CodeVerifierImplTest {
 
     private GameConfig gameConfig = new GameConfig(5);
-    private CodeVerifierImpl impl;
+    private ResponseToken.CodeVerifierImpl impl;
 
     @Before
     public void configure() {
-        impl = new CodeVerifierImpl(gameConfig);
+        impl = new ResponseToken.CodeVerifierImpl(gameConfig);
     }
 
     @Test
