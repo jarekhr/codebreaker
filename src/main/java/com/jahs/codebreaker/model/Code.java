@@ -10,19 +10,19 @@ import java.util.stream.Collectors;
 /**
  * Code is a fixed length sequence of colors.
  */
-public class Code {
+public class  Code {
 
     private final List<PinColor> pins;
     private final Set<PinColor> pinsSet;
 
     public Code(GameConfig gameConfig, List<PinColor> pins) {
         // make sure we get all the pins..
-        if (pins.size() != GameConstants.CODE_LENGTH) {
-            throw new IllegalArgumentException("Expected " + GameConstants.CODE_LENGTH
+        if (pins.size() != gameConfig.getCodeLength()) {
+            throw new IllegalArgumentException("Expected " + gameConfig.getCodeLength()
                     + " pins, but got " + pins);
         }
         pinsSet = EnumSet.copyOf(pins.stream().collect(Collectors.toSet()));
-        if (pinsSet.size() != GameConstants.CODE_LENGTH) {
+        if (pinsSet.size() != gameConfig.getCodeLength()) {
             throw new IllegalArgumentException("Expected all unique pins, got: " + pins);
         }
 
@@ -34,7 +34,7 @@ public class Code {
     }
 
     public PinColor getPinAtPosition(int positionIndex) {
-        if (positionIndex >= GameConstants.CODE_LENGTH) {
+        if (positionIndex >= pins.size() -1) {
             throw new IllegalArgumentException("Index out of range: " + positionIndex);
         }
         return pins.get(positionIndex);
@@ -44,4 +44,25 @@ public class Code {
         return pinsSet.contains(color);
     }
 
+    @Override
+    public String toString() {
+        return "Code{" +
+                "pins=" + pins +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Code code = (Code) o;
+
+        return getPins() != null ? getPins().equals(code.getPins()) : code.getPins() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getPins() != null ? getPins().hashCode() : 0;
+    }
 }
