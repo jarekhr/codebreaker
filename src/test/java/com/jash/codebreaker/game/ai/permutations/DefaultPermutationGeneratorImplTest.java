@@ -63,6 +63,18 @@ public class DefaultPermutationGeneratorImplTest {
         Assert.assertEquals(expected, ImmutableSet.copyOf(words));
     }
 
+    @Test
+    public void testGenerateAAA() {
+        permutationGenerator.generatePermutationsWithRepetitions(Arrays.asList("A", "A", "A"),
+                clientOutlet::acceptAll);
+        Set<String> expected = ImmutableSet.<String>builder()
+                .add("AAA")
+                .build();
+        List<String> words  = concatWords(clientOutlet.getCollected());
+        Assert.assertEquals(expected.size(), words.size());
+        Assert.assertEquals(expected, ImmutableSet.copyOf(words));
+    }
+
 
     private static List<String> concatWords(List<List<String>> words) {
         List<String> reduced = words.stream()

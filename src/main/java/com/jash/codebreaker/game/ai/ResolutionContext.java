@@ -24,7 +24,7 @@ public class ResolutionContext {
     }
 
 
-    private static class FieldConfig {
+    public static class FieldConfig {
 
         private final Set<PinColor> allowedColors;
         private final PinColor selectedColor;
@@ -37,6 +37,26 @@ public class ResolutionContext {
         public boolean isSelected() {
             return selectedColor != null;
         }
+
+        public PinColor getSelectedColor() {
+            return selectedColor;
+        }
     }
 
+
+    public static ResolutionContext emptyContext(GameConfig gameConfig) {
+        //none of the colors is selected, and any color can be assigned to any of the fields.
+
+        FieldConfig fieldConfig = new FieldConfig(ImmutableSet.copyOf(PinColor.values()), null);
+        ImmutableList.Builder<FieldConfig> configList = ImmutableList.builder();
+        for (int i = 0; i < gameConfig.getCodeLength(); i++) {
+            configList.add(fieldConfig);
+        }
+        return new ResolutionContext(gameConfig, configList.build());
+    }
+
+
+    public FieldConfig getFieldConfig(int i) {
+        return fields.get(i);
+    }
 }

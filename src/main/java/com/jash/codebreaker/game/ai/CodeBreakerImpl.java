@@ -25,6 +25,15 @@ public class CodeBreakerImpl implements CodeBreaker {
         }
 
 
+        return produceRegularGuess(guessHistory);
+    }
+
+    private Code produceRegularGuess(GuessHistory guessHistory) {
+        ResolutionContext resolutionContext = ResolutionContext.emptyContext(gameConfig);
+
+        // now, let's loop through guesses and produce a context.
+
+
         return null;
     }
 

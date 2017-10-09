@@ -1,19 +1,18 @@
 package com.jahs.codebreaker.model;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * Code is a fixed length sequence of colors.
  */
-public class  Code {
+public class Code {
 
     private final List<PinColor> pins;
-    private final Set<PinColor> pinsSet;
+    private final Map<PinColor, Integer> colorToIndex;
 
     public Code(GameConfig gameConfig, List<PinColor> pins) {
         // make sure we get all the pins..
@@ -21,11 +20,14 @@ public class  Code {
             throw new IllegalArgumentException("Expected " + gameConfig.getCodeLength()
                     + " pins, but got " + pins);
         }
-        pinsSet = EnumSet.copyOf(pins.stream().collect(Collectors.toSet()));
-        if (pinsSet.size() != gameConfig.getCodeLength()) {
+        ImmutableMap.Builder<PinColor, Integer> indexBuilder = ImmutableMap.builder();
+        for (int i = 0; i < gameConfig.getCodeLength(); i++) {
+            indexBuilder.put(pins.get(i), i);
+        }
+        this.colorToIndex = indexBuilder.build();
+        if (colorToIndex.keySet().size() != gameConfig.getCodeLength()) {
             throw new IllegalArgumentException("Expected all unique pins, got: " + pins);
         }
-
         this.pins = ImmutableList.copyOf(pins);
     }
 
@@ -41,7 +43,15 @@ public class  Code {
     }
 
     public boolean hasColor(PinColor color) {
-        return pinsSet.contains(color);
+        return colorToIndex.keySet().contains(color);
+    }
+
+    public int getColorPosition(PinColor color) {
+        Integer index = colorToIndex.get(color);
+        if (index == null) {
+            return -1;
+        }
+        return index;
     }
 
     @Override
