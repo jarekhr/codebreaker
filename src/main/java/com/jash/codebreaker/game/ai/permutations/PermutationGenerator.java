@@ -12,10 +12,13 @@ public interface PermutationGenerator {
      * Generates permutations with repetitions.
      * Eg. for source AAB it should generate:
      * AAB, ABA, BAA.
+     * <T> need to have equals and hashCode implemented!
+     *
+     *
      * @param sourceItems
-     * @param client returns true if permutations should still be generated. False otherwise.
+     * @param interceptingClient returns true if permutations should still be generated. False otherwise.
      * @param <T>
      */
-    <T> void generatePermutationsWithRepetitions(List<T> sourceItems, Function<List<T>, Boolean> client);
+    <T> void generatePermutationsWithRepetitions(List<T> sourceItems, Function<List<T>, Boolean> interceptingClient);
 
 }
