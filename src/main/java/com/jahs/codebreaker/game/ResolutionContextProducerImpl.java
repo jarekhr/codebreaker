@@ -1,18 +1,17 @@
-package com.jash.codebreaker.game;
+package com.jahs.codebreaker.game;
 
 import com.google.common.collect.Sets;
+import com.jahs.codebreaker.game.ai.permutations.PermutationGenerator;
 import com.jahs.codebreaker.model.Code;
 import com.jahs.codebreaker.model.GameConfig;
 import com.jahs.codebreaker.model.GuessResults;
 import com.jahs.codebreaker.model.PinColor;
-import com.jash.codebreaker.game.ai.ResolutionContext;
-import com.jash.codebreaker.game.ai.ResponseToken;
-import com.jash.codebreaker.game.ai.permutations.PermutationGenerator;
+import com.jahs.codebreaker.game.ai.ResolutionContext;
+import com.jahs.codebreaker.game.ai.ResponseToken;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

@@ -1,4 +1,4 @@
-package com.jash.codebreaker.game;
+package com.jahs.codebreaker.game;
 
 import com.jahs.codebreaker.model.Code;
 import com.jahs.codebreaker.model.GuessHistory;

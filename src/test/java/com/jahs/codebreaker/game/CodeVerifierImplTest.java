@@ -1,10 +1,10 @@
-package com.jash.codebreaker.game;
+package com.jahs.codebreaker.game;
 
 import com.jahs.codebreaker.model.Code;
 import com.jahs.codebreaker.model.GameConfig;
 import com.jahs.codebreaker.model.PinColor;
 import com.jahs.codebreaker.model.Response;
-import com.jash.codebreaker.game.ai.ResponseToken;
+import com.jahs.codebreaker.game.ai.ResponseToken;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

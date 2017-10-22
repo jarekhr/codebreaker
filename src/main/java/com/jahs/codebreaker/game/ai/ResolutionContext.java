@@ -1,4 +1,4 @@
-package com.jash.codebreaker.game.ai;
+package com.jahs.codebreaker.game.ai;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -49,9 +49,7 @@ public class ResolutionContext {
 
         FieldConfig fieldConfig = new FieldConfig(ImmutableSet.copyOf(PinColor.values()), null);
         ImmutableList.Builder<FieldConfig> configList = ImmutableList.builder();
-        for (int i = 0; i < gameConfig.getCodeLength(); i++) {
-            configList.add(fieldConfig);
-        }
+        gameConfig.getIndexesStream().forEach(i -> configList.add(fieldConfig));
         return new ResolutionContext(gameConfig, configList.build());
     }
 

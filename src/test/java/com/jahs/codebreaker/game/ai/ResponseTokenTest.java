@@ -1,4 +1,4 @@
-package com.jash.codebreaker.game.ai;
+package com.jahs.codebreaker.game.ai;
 
 import com.jahs.codebreaker.model.GameConfig;
 import com.jahs.codebreaker.model.Response;

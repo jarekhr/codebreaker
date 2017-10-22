@@ -1,4 +1,4 @@
-package com.jash.codebreaker.game.ai.permutations;
+package com.jahs.codebreaker.game.ai.permutations;
 
 import com.google.common.collect.ImmutableSet;
 import org.junit.Assert;

@@ -1,4 +1,4 @@
-package com.jash.codebreaker.game.ai.permutations;
+package com.jahs.codebreaker.game.ai.permutations;
 
 import java.util.List;
 import java.util.function.Function;

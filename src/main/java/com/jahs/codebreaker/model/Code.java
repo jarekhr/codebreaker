@@ -21,9 +21,7 @@ public class Code {
                     + " pins, but got " + pins);
         }
         ImmutableMap.Builder<PinColor, Integer> indexBuilder = ImmutableMap.builder();
-        for (int i = 0; i < gameConfig.getCodeLength(); i++) {
-            indexBuilder.put(pins.get(i), i);
-        }
+        gameConfig.getIndexesStream().forEachOrdered(i -> indexBuilder.put(pins.get(i), i));
         this.colorToIndex = indexBuilder.build();
         if (colorToIndex.keySet().size() != gameConfig.getCodeLength()) {
             throw new IllegalArgumentException("Expected all unique pins, got: " + pins);

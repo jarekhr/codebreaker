@@ -1,8 +1,8 @@
 package com.jahs.codebreaker.model;
 
-import com.google.common.collect.Sets;
-
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GameConfig {
 
@@ -17,10 +17,10 @@ public class GameConfig {
     }
 
     public Set<Integer> getAllIndexes() {
-        Set<Integer> indexes = Sets.newHashSet();
-        for (int i = 0; i < codeLength; i++) {
-            indexes.add(i);
-        }
-        return indexes;
+        return getIndexesStream().boxed().collect(Collectors.toSet());
+    }
+
+    public IntStream getIndexesStream() {
+        return IntStream.range(0, codeLength);
     }
 }

@@ -1,4 +1,4 @@
-package com.jash.codebreaker.game.ai;
+package com.jahs.codebreaker.game.ai;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -6,10 +6,11 @@ import com.jahs.codebreaker.model.Code;
 import com.jahs.codebreaker.model.GameConfig;
 import com.jahs.codebreaker.model.PinColor;
 import com.jahs.codebreaker.model.Response;
-import com.jash.codebreaker.game.CodeVerifier;
+import com.jahs.codebreaker.game.CodeVerifier;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public enum ResponseToken {
     HIT, // precise guess
@@ -27,9 +28,7 @@ public enum ResponseToken {
     }
 
     private static void addTokens(List<ResponseToken> target, int count, ResponseToken token) {
-        for (int i = 0; i < count; i++) {
-            target.add(token);
-        }
+        IntStream.range(0, count).forEach(val -> target.add(token));
     }
 
     /**

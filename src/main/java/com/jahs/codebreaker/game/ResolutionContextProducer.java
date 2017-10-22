@@ -1,9 +1,8 @@
-package com.jash.codebreaker.game;
+package com.jahs.codebreaker.game;
 
 import com.jahs.codebreaker.model.GuessResults;
-import com.jash.codebreaker.game.ai.ResolutionContext;
+import com.jahs.codebreaker.game.ai.ResolutionContext;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**

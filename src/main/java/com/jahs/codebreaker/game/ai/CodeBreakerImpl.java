@@ -1,10 +1,10 @@
-package com.jash.codebreaker.game.ai;
+package com.jahs.codebreaker.game.ai;
 
 import com.jahs.codebreaker.model.Code;
 import com.jahs.codebreaker.model.GameConfig;
 import com.jahs.codebreaker.model.GuessHistory;
 import com.jahs.codebreaker.model.PinColor;
-import com.jash.codebreaker.game.CodeBreaker;
+import com.jahs.codebreaker.game.CodeBreaker;
 
 import java.util.Arrays;
 import java.util.Objects;
