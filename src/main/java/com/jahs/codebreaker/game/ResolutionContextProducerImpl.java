@@ -9,11 +9,13 @@ import com.jahs.codebreaker.model.PinColor;
 import com.jahs.codebreaker.game.ai.ResolutionContext;
 import com.jahs.codebreaker.game.ai.ResponseToken;
 
+import javax.xml.ws.Response;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Resolution context producer.
@@ -34,7 +36,7 @@ public class ResolutionContextProducerImpl implements ResolutionContextProducer 
     @Override
     public void applyGuess(ResolutionContext baseContext, GuessResults guessResults, Function<ResolutionContext, Boolean> interceptingConsumer) {
         // first, identify which fields still need to be allocated.
-        List<ResponseToken> guestTokensToAllocate = ResponseToken.getTokensFromResponse(guessResults.getResponse());
+        List<ResponseToken> guessTokensToAllocate = ResponseToken.getTokensFromResponse(guessResults.getResponse());
         Set<Integer> sourceIndexesToAllocate = Sets.newHashSet();
         Set<Integer> guessIndexesToAllocate = gameConfig.getAllIndexes();
 //        Set<PinColor> colorPool = Sets.newHashSet();
@@ -50,20 +52,14 @@ public class ResolutionContextProducerImpl implements ResolutionContextProducer 
                     int positionAtGuess = guessResults.getGuess().getColorPosition(selectedColor);
                     if (positionAtGuess == i) {
                         // same index, it means it has to be a black pin in the guess.
-                        int blackIndex = guestTokensToAllocate.indexOf(ResponseToken.HIT);
-                        if (blackIndex < 0) {
-                            // contradictory
+                        if (!removeToken(guessTokensToAllocate, ResponseToken.HIT)) {
                             return;
                         }
-                        guestTokensToAllocate.remove(blackIndex);
                     } else {
                         // it has to be a white token then.
-                        int whiteIndex = guestTokensToAllocate.indexOf(ResponseToken.MISPLACED);
-                        if (whiteIndex < 0) {
-                            // contradictory
+                        if (!removeToken(guessTokensToAllocate, ResponseToken.MISPLACED)) {
                             return;
                         }
-                        guestTokensToAllocate.remove(whiteIndex);
                     }
                     guessIndexesToAllocate.remove(positionAtGuess);
                 }
@@ -73,27 +69,41 @@ public class ResolutionContextProducerImpl implements ResolutionContextProducer 
         }
 
         // now we need to allocate tokens to positions.
-        System.out.println("Still got " + guestTokensToAllocate + " tokens to allocate.");
+        System.out.println("Still got " + guessTokensToAllocate + " tokens to allocate.");
         List<Integer> sourceIndexesSorted = sourceIndexesToAllocate.stream().sorted().collect(Collectors.toList());
         List<Integer> guessIndexesSorted = guessIndexesToAllocate.stream().sorted().collect(Collectors.toList());
-        permutationGenerator.generatePermutationsWithRepetitions(guestTokensToAllocate, perm -> acceptPermutation(baseContext,
+        permutationGenerator.generatePermutationsWithRepetitions(guessTokensToAllocate, perm -> acceptPermutation(baseContext,
                 perm, sourceIndexesSorted, guessIndexesSorted, guessResults.getGuess(), interceptingConsumer));
     }
+
+    private static boolean removeToken(List<ResponseToken> pool, ResponseToken token) {
+        int index = pool.indexOf(token);
+        if (index < 0) {
+            // contradictory
+            return false;
+        }
+        pool.remove(index);
+        return true;
+    }
+
 
     private boolean acceptPermutation(ResolutionContext ctx, List<ResponseToken> perm,
                                       List<Integer> sourceIndexes,
                                       List<Integer> guessIndexes,
                                       Code guess,
                                       Function<ResolutionContext, Boolean> interceptingConsumer) {
+        boolean sizesMatch = (perm.size() == sourceIndexes.size() && sourceIndexes.size() == guessIndexes.size());
+        if (!sizesMatch) {
+            throw new IllegalArgumentException("Expected same sizes, got different.");
+        }
 
         // now, let's apply permutation and calculate implications on the context.
-        for (int i = 0; i < perm.size(); i++) {
+        IntStream.range(0, perm.size()).forEachOrdered(i -> {
             ResponseToken token = perm.get(i);
             int sourceIndex = sourceIndexes.get(i);
             int guessIndex = guessIndexes.get(i);
 
-        }
-
+        });
 
         return false;
     }

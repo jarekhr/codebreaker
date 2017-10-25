@@ -2,6 +2,7 @@ package com.jahs.codebreaker.game.ai;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.jahs.codebreaker.model.GameConfig;
 import com.jahs.codebreaker.model.PinColor;
 
@@ -27,19 +28,21 @@ public class ResolutionContext {
     public static class FieldConfig {
 
         private final Set<PinColor> allowedColors;
-        private final PinColor selectedColor;
 
-        public FieldConfig(Set<PinColor> allowedColors, PinColor selectedColor) {
+        public FieldConfig(Set<PinColor> allowedColors) {
             this.allowedColors = ImmutableSet.copyOf(allowedColors);
-            this.selectedColor = selectedColor;
         }
 
         public boolean isSelected() {
-            return selectedColor != null;
+            return allowedColors.size() == 1;
         }
 
         public PinColor getSelectedColor() {
-            return selectedColor;
+            return Iterables.getOnlyElement(allowedColors);
+        }
+
+        public Set<PinColor> getAllowedColors() {
+            return allowedColors;
         }
     }
 
@@ -47,7 +50,7 @@ public class ResolutionContext {
     public static ResolutionContext emptyContext(GameConfig gameConfig) {
         //none of the colors is selected, and any color can be assigned to any of the fields.
 
-        FieldConfig fieldConfig = new FieldConfig(ImmutableSet.copyOf(PinColor.values()), null);
+        FieldConfig fieldConfig = new FieldConfig(ImmutableSet.copyOf(PinColor.values()));
         ImmutableList.Builder<FieldConfig> configList = ImmutableList.builder();
         gameConfig.getIndexesStream().forEach(i -> configList.add(fieldConfig));
         return new ResolutionContext(gameConfig, configList.build());
