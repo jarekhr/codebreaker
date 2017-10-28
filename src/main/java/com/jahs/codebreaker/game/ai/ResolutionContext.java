@@ -28,11 +28,14 @@ public class ResolutionContext {
                     + " configs, got: " + fieldConfigs.size());
         }
 
-        // TODO jarek we should try and allocate required colors if possible.
-//        this.fields = tryToAllocateRequired(fieldConfigs)
+        RequiredAllocationParams params = new RequiredAllocationParams(fieldConfigs, colorsRequiredButNotAllocated);
 
-        this.fields = ImmutableList.copyOf(fieldConfigs);
-        this.colorsRequiredButNotAllocated = EnumSet.copyOf(colorsRequiredButNotAllocated);
+        this.fields = ImmutableList.copyOf(params.getFieldConfigs());
+        this.colorsRequiredButNotAllocated = EnumSet.copyOf(params.getRequiredButMissing());
+    }
+
+    private List<FieldConfig> tryToAllocateRequired(List<FieldConfig> fieldConfigs) {
+        return null;
     }
 
 
@@ -82,7 +85,7 @@ public class ResolutionContext {
         FieldConfig fieldConfig = new FieldConfig(ImmutableSet.copyOf(PinColor.values()));
         ImmutableList.Builder<FieldConfig> configList = ImmutableList.builder();
         gameConfig.getIndexesStream().forEach(i -> configList.add(fieldConfig));
-        return new ResolutionContext(gameConfig, configList.build(), Collections.emptySet());
+        return normalize(new ResolutionContext(gameConfig, configList.build(), Collections.emptySet()));
     }
 
 
@@ -101,13 +104,13 @@ public class ResolutionContext {
             }
             return fieldConfig;
         }).collect(Collectors.toList());
-        return new ResolutionContext(gameConfig, newConfigs, colorsRequiredButNotAllocated);
+        return normalize(new ResolutionContext(gameConfig, newConfigs, colorsRequiredButNotAllocated));
     }
 
     public ResolutionContext excludeColor(PinColor color) {
         List<FieldConfig> newConfigs = fields.stream()
                 .map(fieldConfig -> fieldConfig.withoutColor(color)).collect(Collectors.toList());
-        return new ResolutionContext(gameConfig, newConfigs, colorsRequiredButNotAllocated);
+        return normalize(new ResolutionContext(gameConfig, newConfigs, colorsRequiredButNotAllocated));
     }
 
 
@@ -123,6 +126,31 @@ public class ResolutionContext {
                 .addAll(colorsRequiredButNotAllocated)
                 .add(color)
                 .build();
-        return new ResolutionContext(gameConfig, newConfigs, requiredElsewhere);
+        return normalize(new ResolutionContext(gameConfig, newConfigs, requiredElsewhere));
     }
+
+
+    private static ResolutionContext normalize(ResolutionContext resolutionContext) {
+        if (resolutionContext.colorsRequiredButNotAllocated.isEmpty()) {
+            return resolutionContext;
+        }
+
+        Multimap<PinColor, Integer> multimap = HashMultimap.create();
+        resolutionContext.gameConfig.getIndexesStream().forEachOrdered(i -> {
+            FieldConfig fieldConfig = resolutionContext.getFieldConfig(i);
+            fieldConfig.allowedColors.forEach(color -> multimap.put(color, i));
+        });
+        for (PinColor color: resolutionContext.colorsRequiredButNotAllocated) {
+            Collection<Integer> indexes = multimap.get(color);
+            if (indexes != null && indexes.size() == 1) {
+                // required color is present on 1 index only. Therefore we can just select this color
+                // at this position.
+                int indexToSelect = Iterables.getOnlyElement(indexes);
+                return resolutionContext.selectColor(indexToSelect, color);
+            }
+        };
+        return resolutionContext;
+    }
+
+
 }
